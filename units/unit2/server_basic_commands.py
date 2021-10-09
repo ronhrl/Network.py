@@ -1,4 +1,6 @@
+import random
 import socket
+import time
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # This ip tells the server to listen to every client from the computer or outside
@@ -14,9 +16,16 @@ while True:
     data = client_socket.recv(1024).decode()
     if data == "NAME":
         client_socket.send("Basic command server".encode())
-    if data == "TIME":
-
-
+    elif data == "TIME":
+        client_socket.send(time.asctime(time.gmtime()).encode())
+    elif data == "RAND":
+        client_socket.send(random.randrange(1, 10).__str__().encode())
+    elif data == "Quit":
+        print("closing client socket now...")
+        client_socket.send("Bye".encode())
+        break
+    else:
+        client_socket.send("Please choose another request\n".encode())
 # After closing the client socket the server continue to listen
 client_socket.close()
 # After closing the server socket the communication with clients is over
